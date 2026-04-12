@@ -1,4 +1,4 @@
-let currentLang = "en";
+let currentLang = localStorage.getItem("siteLang") || "en";
 
 const content = {
   en: {
@@ -22,8 +22,52 @@ const content = {
     topic3Text:
       "Advanced control design for Virtual Synchronous Machines using H-infinity methods for improved performance and resilience.",
     footer: "Research homepage draft · Yossef Melamed · Tel Aviv University",
-    button: "עברית"
+    button: "עברית",
+    navHome: "Home",
+    navResults: "Results",
+    navPublications: "Publications",
+    navContact: "Contact",
+    heroBtn1: "View Research Results",
+    heroBtn2: "Publications",
+
+    resultsBadge: "Research Topics Overview",
+    resultsTitle: "Research Results",
+    resultsSubtitle:
+      "This page provides a central entry point to the main research topics, their explanations, results, literature background, scripts, models, and supporting materials.",
+    resCard1Title: "Grid Stability",
+    resCard1Text:
+      "Enter the dedicated research page for grid stability, including idea, methodology, results, literature review, papers, scripts, models, and experiments.",
+    resCard1Btn: "Open Research Page",
+    resCard2Title: "Real-Time Online Inertia Measurement",
+    resCard2Text:
+      "Enter the dedicated research page for online inertia estimation, including explanation, methods, results, papers, scripts, and technical material.",
+    resCard2Btn: "Open Research Page",
+    resCard3Title: "VSM Control with H-Infinity",
+    resCard3Text:
+      "Enter the dedicated research page for VSM control with H-infinity, including controller design, analysis, results, models, and supporting files.",
+    resCard3Btn: "Open Research Page",
+
+    pubBadge: "Academic Work",
+    pubTitle: "Publications",
+    pubSubtitle:
+      "This section can include journal papers, conference submissions, reports, and ongoing work.",
+    pub1Title: "Paper Title 1",
+    pub1Text:
+      "Add publication details here: authors, journal, year, and abstract summary.",
+    pub2Title: "Paper Title 2",
+    pub2Text: "Add another publication, preprint, or conference paper.",
+
+    contactBadge: "Contact",
+    contactTitle: "Contact",
+    contactSubtitle:
+      "For academic collaboration, research discussions, or project inquiries, please use the contact details below.",
+    contactCardTitle: "Contact Information",
+    contactNameLabel: "Name:",
+    contactUniLabel: "University:",
+    contactNameValue: "Yossef Melamed",
+    contactUniValue: "Tel Aviv University"
   },
+
   he: {
     dir: "rtl",
     researcherLabel: "שם החוקר",
@@ -45,37 +89,77 @@ const content = {
     topic3Text:
       "תכנון בקרה מתקדם עבור מכונות סינכרוניות וירטואליות באמצעות שיטות H-infinity לשיפור ביצועים וחוסן.",
     footer: "טיוטת דף בית למחקר · יוסף מלמד · אוניברסיטת תל אביב",
-    button: "English"
+    button: "English",
+    navHome: "דף הבית",
+    navResults: "תוצאות",
+    navPublications: "פרסומים",
+    navContact: "צור קשר",
+    heroBtn1: "צפה בתוצאות המחקר",
+    heroBtn2: "פרסומים",
+
+    resultsBadge: "מפת תחומי המחקר",
+    resultsTitle: "תוצאות מחקר",
+    resultsSubtitle:
+      "עמוד זה מהווה שער מרכזי לתחומי המחקר הראשיים, ההסברים שלהם, התוצאות, הרקע הספרותי, הסקריפטים, המודלים והחומרים התומכים.",
+    resCard1Title: "יציבות הגריד",
+    resCard1Text:
+      "כניסה לעמוד המחקר הייעודי של יציבות הגריד, כולל רעיון, מתודולוגיה, תוצאות, סקירת ספרות, מאמרים, סקריפטים, מודלים וניסויים.",
+    resCard1Btn: "פתח עמוד מחקר",
+    resCard2Title: "מדידת אינרציה בזמן אמת Online",
+    resCard2Text:
+      "כניסה לעמוד המחקר הייעודי של אמידת אינרציה מקוונת, כולל הסבר, שיטות, תוצאות, מאמרים, סקריפטים וחומר טכני.",
+    resCard2Btn: "פתח עמוד מחקר",
+    resCard3Title: "בקרת VSM עם H-Infinity",
+    resCard3Text:
+      "כניסה לעמוד המחקר הייעודי של בקרת VSM עם H-infinity, כולל תכן בקרה, ניתוח, תוצאות, מודלים וקבצים תומכים.",
+    resCard3Btn: "פתח עמוד מחקר",
+
+    pubBadge: "עבודה אקדמית",
+    pubTitle: "פרסומים",
+    pubSubtitle:
+      "חלק זה יכול לכלול מאמרי כתב עת, הגשות לכנסים, דוחות ועבודות מתמשכות.",
+    pub1Title: "כותרת מאמר 1",
+    pub1Text: "הוסף כאן פרטי פרסום: מחברים, כתב עת, שנה ותקציר קצר.",
+    pub2Title: "כותרת מאמר 2",
+    pub2Text: "הוסף כאן מאמר נוסף, preprint או מאמר כנס.",
+
+    contactBadge: "יצירת קשר",
+    contactTitle: "צור קשר",
+    contactSubtitle:
+      "לשיתופי פעולה אקדמיים, דיונים מחקריים או פניות בנושא הפרויקט, ניתן להשתמש בפרטי הקשר הבאים.",
+    contactCardTitle: "פרטי קשר",
+    contactNameLabel: "שם:",
+    contactUniLabel: "אוניברסיטה:",
+    contactNameValue: "יוסף מלמד",
+    contactUniValue: "אוניברסיטת תל אביב"
   }
 };
+
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+}
 
 function applyLanguage(lang) {
   const t = content[lang];
   document.documentElement.lang = lang;
   document.documentElement.dir = t.dir;
 
-  document.getElementById("researcherLabel").textContent = t.researcherLabel;
-  document.getElementById("researcherName").textContent = t.researcherName;
-  document.getElementById("badge").textContent = t.badge;
-  document.getElementById("mainTitle").textContent = t.mainTitle;
-  document.getElementById("subtitle").textContent = t.subtitle;
-  document.getElementById("profileLabel").textContent = t.profileLabel;
-  document.getElementById("profileName").textContent = t.researcherName;
-  document.getElementById("university").textContent = t.university;
-  document.getElementById("topicsTitle").textContent = t.topicsTitle;
-  document.getElementById("topic1Title").textContent = t.topic1Title;
-  document.getElementById("topic1Text").textContent = t.topic1Text;
-  document.getElementById("topic2Title").textContent = t.topic2Title;
-  document.getElementById("topic2Text").textContent = t.topic2Text;
-  document.getElementById("topic3Title").textContent = t.topic3Title;
-  document.getElementById("topic3Text").textContent = t.topic3Text;
-  document.getElementById("footer").textContent = t.footer;
-  document.getElementById("langToggle").textContent = t.button;
+  for (const key in t) {
+    setText(key, t[key]);
+  }
+
+  const btn = document.getElementById("langToggle");
+  if (btn) btn.textContent = t.button;
 }
 
-document.getElementById("langToggle").addEventListener("click", () => {
-  currentLang = currentLang === "en" ? "he" : "en";
-  applyLanguage(currentLang);
-});
+const langButton = document.getElementById("langToggle");
+if (langButton) {
+  langButton.addEventListener("click", () => {
+    currentLang = currentLang === "en" ? "he" : "en";
+    localStorage.setItem("siteLang", currentLang);
+    applyLanguage(currentLang);
+  });
+}
 
 applyLanguage(currentLang);

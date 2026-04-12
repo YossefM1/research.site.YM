@@ -12,6 +12,14 @@
       <div class="small-label" id="researcherLabel">Researcher Name</div>
       <div class="name" id="researcherName">Yossef Melamed</div>
     </div>
+
+    <nav class="nav">
+      <a href="index.html" id="navHome">Home</a>
+      <a href="results.html" id="navResults">Results</a>
+      <a href="publications.html" id="navPublications">Publications</a>
+      <a href="contact.html" id="navContact">Contact</a>
+    </nav>
+
     <button id="langToggle">עברית</button>
   </header>
 
@@ -24,6 +32,11 @@
           A professional homepage presenting core research directions in power systems,
           grid dynamics, and advanced inverter control.
         </p>
+
+        <div class="hero-actions">
+          <a class="primary-btn" href="results.html" id="heroBtn1">View Research Results</a>
+          <a class="secondary-btn" href="publications.html" id="heroBtn2">Publications</a>
+        </div>
       </div>
 
       <div class="profile-card">
@@ -37,26 +50,26 @@
       <h2 id="topicsTitle">Research Topics</h2>
 
       <div class="cards">
-        <div class="card">
+        <a class="card clickable-card" href="grid-stability.html">
           <h3 id="topic1Title">Grid Stability</h3>
           <p id="topic1Text">
             Research on dynamic behavior, robustness, and stability challenges in modern electric grids with increasing inverter-based resources.
           </p>
-        </div>
+        </a>
 
-        <div class="card">
+        <a class="card clickable-card" href="inertia-measurement.html">
           <h3 id="topic2Title">Real-Time Online Inertia Measurement</h3>
           <p id="topic2Text">
             Development of methods for estimating grid inertia online in real time, with emphasis on monitoring and system awareness.
           </p>
-        </div>
+        </a>
 
-        <div class="card">
+        <a class="card clickable-card" href="vsm-hinfinity.html">
           <h3 id="topic3Title">VSM Control with H-Infinity</h3>
           <p id="topic3Text">
             Advanced control design for Virtual Synchronous Machines using H-infinity methods for improved performance and resilience.
           </p>
-        </div>
+        </a>
       </div>
     </section>
   </main>
