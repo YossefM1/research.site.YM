@@ -50,18 +50,15 @@ const content = {
     pubBadge: "Academic Work",
     pubTitle: "Publications",
     pubSubtitle:
-      "This section can include journal papers, conference submissions, reports, and ongoing work.",
-    pub1Title: "Paper Title 1",
-    pub1Text:
-      "Add publication details here: authors, journal, year, and abstract summary.",
-    pub2Title: "Paper Title 2",
-    pub2Text: "Add another publication, preprint, or conference paper.",
+      "Peer-reviewed publications from research in power systems and advanced grid control.",
 
     contactBadge: "Contact",
     contactTitle: "Contact",
     contactSubtitle:
       "For academic collaboration, research discussions, or project inquiries, please use the contact details below.",
     contactCardTitle: "Contact Information",
+    contactRoleLabel: "Role:",
+    contactRoleValue: "PhD Researcher",
     contactNameLabel: "Name:",
     contactUniLabel: "University:",
     contactNameValue: "Yossef Melamed",
@@ -117,17 +114,15 @@ const content = {
     pubBadge: "עבודה אקדמית",
     pubTitle: "פרסומים",
     pubSubtitle:
-      "חלק זה יכול לכלול מאמרי כתב עת, הגשות לכנסים, דוחות ועבודות מתמשכות.",
-    pub1Title: "כותרת מאמר 1",
-    pub1Text: "הוסף כאן פרטי פרסום: מחברים, כתב עת, שנה ותקציר קצר.",
-    pub2Title: "כותרת מאמר 2",
-    pub2Text: "הוסף כאן מאמר נוסף, preprint או מאמר כנס.",
+      "פרסומים עמיתים ממחקר במערכות הספק ובקרת רשת מתקדמת.",
 
     contactBadge: "יצירת קשר",
     contactTitle: "צור קשר",
     contactSubtitle:
       "לשיתופי פעולה אקדמיים, דיונים מחקריים או פניות בנושא הפרויקט, ניתן להשתמש בפרטי הקשר הבאים.",
     contactCardTitle: "פרטי קשר",
+    contactRoleLabel: "תפקיד:",
+    contactRoleValue: "חוקר דוקטורט",
     contactNameLabel: "שם:",
     contactUniLabel: "אוניברסיטה:",
     contactNameValue: "יוסף מלמד",
