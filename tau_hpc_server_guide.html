@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>מדריך עבודה עם שרת האוניברסיטה - TAU PowerSlurm</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg2: #111827;
+      --card: #ffffff;
+      --muted-card: #f8fafc;
+      --text: #1f2937;
+      --muted: #64748b;
+      --primary: #2563eb;
+      --primary-dark: #1e40af;
+      --accent: #14b8a6;
+      --danger: #dc2626;
+      --warning: #f59e0b;
+      --ok: #16a34a;
+      --border: #e5e7eb;
+      --code-bg: #0b1020;
+      --code-border: #1f2a44;
+      --code-text: #e5e7eb;
+      --shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #eef2ff 0%, #f8fafc 38%, #ffffff 100%);
+      line-height: 1.65;
+    }
+
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .hero {
+      background:
+        radial-gradient(circle at 20% 20%, rgba(20, 184, 166, 0.35), transparent 25%),
+        radial-gradient(circle at 80% 20%, rgba(37, 99, 235, 0.35), transparent 22%),
+        linear-gradient(135deg, #0f172a 0%, #172554 50%, #0f766e 100%);
+      color: white;
+      padding: 56px 28px 42px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -10% -45% -10%;
+      height: 260px;
+      background: rgba(255, 255, 255, 0.08);
+      transform: rotate(-4deg);
+      border-radius: 50%;
+    }
+
+    .hero-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(8px);
+      font-size: 0.92rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4.2vw, 4.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+      max-width: 900px;
+      margin: 18px 0 0;
+      font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+      color: #dbeafe;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .meta-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 16px;
+      padding: 14px 16px;
+    }
+
+    .meta-card strong {
+      display: block;
+      color: white;
+      margin-bottom: 4px;
+    }
+
+    .meta-card span { color: #dbeafe; }
+
+    .layout {
+      max-width: 1180px;
+      margin: -22px auto 70px;
+      padding: 0 22px;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 22px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .toc {
+      position: sticky;
+      top: 18px;
+      align-self: start;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      max-height: calc(100vh - 36px);
+      overflow: auto;
+    }
+
+    .toc h2 {
+      font-size: 1.05rem;
+      margin: 0 0 12px;
+    }
+
+    .toc a {
+      display: block;
+      padding: 9px 10px;
+      color: #334155;
+      border-radius: 10px;
+      font-size: 0.95rem;
+    }
+
+    .toc a:hover {
+      background: #eff6ff;
+      color: var(--primary-dark);
+      text-decoration: none;
+    }
+
+    main { min-width: 0; }
+
+    section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      margin-bottom: 22px;
+      overflow: hidden;
+    }
+
+    section h2 {
+      margin: 0 0 14px;
+      font-size: clamp(1.45rem, 2vw, 2rem);
+      line-height: 1.2;
+      color: #0f172a;
+    }
+
+    section h3 {
+      margin: 26px 0 10px;
+      color: #1e293b;
+      font-size: 1.18rem;
+    }
+
+    .lead {
+      color: #475569;
+      font-size: 1.05rem;
+      margin-top: 0;
+    }
+
+    .callout {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+      border-radius: 16px;
+      padding: 16px;
+      margin: 18px 0;
+      border: 1px solid;
+    }
+
+    .callout .icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+    }
+
+    .callout.warning {
+      background: #fffbeb;
+      border-color: #fde68a;
+    }
+    .callout.warning .icon { background: var(--warning); }
+
+    .callout.ok {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+    }
+    .callout.ok .icon { background: var(--ok); }
+
+    .callout.info {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+    }
+    .callout.info .icon { background: var(--primary); }
+
+    .callout.danger {
+      background: #fef2f2;
+      border-color: #fecaca;
+    }
+    .callout.danger .icon { background: var(--danger); }
+
+    .steps {
+      counter-reset: step;
+      display: grid;
+      gap: 14px;
+      margin: 18px 0;
+    }
+
+    .step {
+      counter-increment: step;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      padding: 16px;
+      background: var(--muted-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+
+    .step::before {
+      content: counter(step);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .step h4 {
+      margin: 0 0 6px;
+      font-size: 1.03rem;
+    }
+
+    .step p { margin: 0; color: #475569; }
+
+    .code-card {
+      margin: 14px 0 18px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--code-border);
+      background: var(--code-bg);
+      direction: ltr;
+      text-align: left;
+    }
+
+    .code-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 12px;
+      background: #111827;
+      border-bottom: 1px solid var(--code-border);
+      color: #cbd5e1;
+      font-size: 0.85rem;
+    }
+
+    .copy-btn {
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: #f8fafc;
+      border-radius: 9px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      transition: 0.16s ease;
+    }
+
+    .copy-btn:hover {
+      background: #334155;
+      transform: translateY(-1px);
+    }
+
+    pre {
+      margin: 0;
+      padding: 16px;
+      overflow-x: auto;
+      color: var(--code-text);
+      font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      direction: ltr;
+      text-align: left;
+      white-space: pre;
+    }
+
+    code {
+      font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+      direction: ltr;
+      unicode-bidi: plaintext;
+    }
+
+    .inline-code {
+      background: #eef2ff;
+      color: #3730a3;
+      border: 1px solid #c7d2fe;
+      padding: 2px 6px;
+      border-radius: 7px;
+      direction: ltr;
+      unicode-bidi: plaintext;
+      white-space: nowrap;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .mini-card {
+      padding: 16px;
+      background: var(--muted-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+
+    .mini-card h3, .mini-card h4 { margin-top: 0; }
+    .mini-card p:last-child { margin-bottom: 0; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      overflow: hidden;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      direction: rtl;
+    }
+
+    th, td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      background: #f1f5f9;
+      text-align: right;
+      color: #0f172a;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .kbd {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 7px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      box-shadow: inset 0 -1px 0 #cbd5e1;
+      font-family: "Cascadia Code", Consolas, monospace;
+      font-size: 0.9em;
+      direction: ltr;
+    }
+
+    .footer {
+      max-width: 1180px;
+      margin: 0 auto 36px;
+      padding: 0 22px;
+      color: #64748b;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 960px) {
+      .layout { grid-template-columns: 1fr; }
+      .toc { position: relative; top: auto; }
+      .grid-2 { grid-template-columns: 1fr; }
+      section { padding: 22px; }
+    }
+
+    @media print {
+      .toc, .copy-btn { display: none; }
+      .layout { grid-template-columns: 1fr; margin: 0; }
+      section { box-shadow: none; break-inside: avoid; }
+      .hero { color: #111827; background: white; padding: 24px; }
+      body { background: white; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="badge-row">
+        <span class="badge">🎓 Tel Aviv University HPC</span>
+        <span class="badge">🖥️ PowerSlurm</span>
+        <span class="badge">⚡ MATLAB / MATPOWER</span>
+        <span class="badge">📦 SLURM Jobs</span>
+      </div>
+      <h1>מדריך עבודה עם שרת האוניברסיטה</h1>
+      <p class="subtitle">מדריך מעשי למתחילים: התחברות מהבית, עבודה נכונה עם השרת, שליחת חישובים כבדים דרך SLURM, מעקב אחר ריצות, שמירת תוצאות והורדה למחשב המקומי.</p>
+      <div class="meta-grid">
+        <div class="meta-card"><strong>משתמש לדוגמה</strong><span>yossefm1</span></div>
+        <div class="meta-card"><strong>שרת כניסה</strong><span>powerslurm-login3.tau.ac.il</span></div>
+        <div class="meta-card"><strong>פרוטוקול קבצים</strong><span>SFTP דרך WinSCP</span></div>
+        <div class="meta-card"><strong>עקרון מרכזי</strong><span>לא מריצים חישוב כבד על login node</span></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="toc">
+      <h2>תוכן עניינים</h2>
+      <a href="#overview">1. עקרונות עבודה</a>
+      <a href="#vpn">2. התחברות מהבית</a>
+      <a href="#terminal">3. Windows Terminal</a>
+      <a href="#winscp">4. WinSCP להעברת קבצים</a>
+      <a href="#first-login">5. כניסה לשרת</a>
+      <a href="#folders">6. תיקיות עבודה</a>
+      <a href="#slurm-basics">7. בסיס SLURM</a>
+      <a href="#matpower-test">8. בדיקת MATPOWER</a>
+      <a href="#parallel-test">9. בדיקת מקביליות</a>
+      <a href="#heavy-job">10. הרצת חישוב כבד</a>
+      <a href="#monitoring">11. מעקב וניהול jobs</a>
+      <a href="#results">12. תוצאות והורדה</a>
+      <a href="#troubleshooting">13. תקלות נפוצות</a>
+      <a href="#quick-ref">14. פקודות מהירות</a>
+    </aside>
+
+    <main>
+      <section id="overview">
+        <h2>1. עקרונות עבודה נכונים עם שרת חישובים</h2>
+        <p class="lead">שרת הכניסה, למשל <span class="inline-code">powerslurm-login3</span>, מיועד לעריכת קבצים, שליחת jobs, בדיקת תוצאות וניהול עבודה. חישובים כבדים צריך לשלוח לתור דרך <span class="inline-code">sbatch</span>.</p>
+
+        <div class="callout danger">
+          <div class="icon">!</div>
+          <div>
+            <strong>כלל זהב:</strong> לא מריצים MATLAB כבד, סימולציות, לולאות גדולות או עומס CPU ישירות על שרת הכניסה. משתמשים ב־SLURM.
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="mini-card">
+            <h3>מה עושים על login node?</h3>
+            <p>מתחברים, מעלים קבצים, עורכים סקריפטים קצרים, שולחים jobs, בודקים logs, מורידים תוצאות.</p>
+          </div>
+          <div class="mini-card">
+            <h3>מה עושים דרך SLURM?</h3>
+            <p>MATLAB, MATPOWER, Python כבד, סימולציות, חישובי מפות, ריצות ארוכות, חישוב מקבילי.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="vpn">
+        <h2>2. התחברות מהבית דרך VPN</h2>
+        <p class="lead">כאשר עובדים מהבית, בדרך כלל צריך להתחבר קודם ל־VPN של האוניברסיטה. אחרי שה־VPN מחובר, ניתן לבצע SSH ו־SFTP לשרת.</p>
+
+        <div class="steps">
+          <div class="step"><div><h4>פתיחת GlobalProtect</h4><p>פתח את GlobalProtect והתחבר עם חשבון האוניברסיטה. אם מופיע מסך Google Authenticator Enrollment, השלם אימות דו־שלבי לפי ההנחיות.</p></div></div>
+          <div class="step"><div><h4>בדיקת חיבור VPN</h4><p>לאחר שה־VPN מציג Connected, בדוק שהשרת זמין באמצעות ping או SSH.</p></div></div>
+        </div>
+
+        <div class="code-card">
+          <div class="code-head"><span>בדיקת גישה מהבית</span><button class="copy-btn">Copy</button></div>
+          <pre><code>ping powerslurm-login3.tau.ac.il
+ssh yossefm1@powerslurm-login3.tau.ac.il</code></pre>
+        </div>
+      </section>
+
+      <section id="terminal">
+        <h2>3. עבודה מומלצת עם Windows Terminal</h2>
+        <p class="lead">לעבודה יומיומית עדיף להשתמש ב־Windows Terminal ולא ב־CMD הרגיל. הוא תומך בטאבים, פיצול מסך, צבעים, פונט נוח ופרופילי SSH קבועים.</p>
+
+        <h3>הגדרות מומלצות</h3>
+        <table>
+          <thead><tr><th>הגדרה</th><th>ערך מומלץ</th></tr></thead>
+          <tbody>
+            <tr><td>Application Theme</td><td><span class="inline-code">Dark</span></td></tr>
+            <tr><td>Color scheme</td><td><span class="inline-code">One Half Dark</span></td></tr>
+            <tr><td>Font face</td><td><span class="inline-code">Cascadia Code</span></td></tr>
+            <tr><td>Font size</td><td><span class="inline-code">13</span></td></tr>
+            <tr><td>Launch size</td><td><span class="inline-code">140 columns × 40 rows</span></td></tr>
+          </tbody>
+        </table>
+
+        <h3>יצירת פרופיל קבוע לשרת</h3>
+        <p>ב־Windows Terminal: <span class="inline-code">Settings → Add a new profile</span>. שם הפרופיל: <span class="inline-code">TAU HPC</span>.</p>
+        <div class="code-card">
+          <div class="code-head"><span>Command line לפרופיל TAU HPC</span><button class="copy-btn">Copy</button></div>
+          <pre><code>ssh yossefm1@powerslurm-login3.tau.ac.il</code></pre>
+        </div>
+
+        <h3>קיצורים שימושיים</h3>
+        <table>
+          <tbody>
+            <tr><td><span class="kbd">Ctrl</span> + <span class="kbd">Shift</span> + <span class="kbd">T</span></td><td>פתיחת טאב חדש</td></tr>
+            <tr><td><span class="kbd">Ctrl</span> + <span class="kbd">Shift</span> + <span class="kbd">W</span></td><td>סגירת טאב</td></tr>
+            <tr><td><span class="kbd">Alt</span> + <span class="kbd">Shift</span> + <span class="kbd">+</span></td><td>פיצול מסך אנכי</td></tr>
+            <tr><td><span class="kbd">Alt</span> + חצים</td><td>מעבר בין פאנלים</td></tr>
+            <tr><td><span class="kbd">Ctrl</span> + <span class="kbd">Shift</span> + <span class="kbd">F</span></td><td>חיפוש בטקסט הטרמינל</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="winscp">
+        <h2>4. WinSCP להעברת קבצים</h2>
+        <p class="lead">WinSCP מתאים להעלאת קבצי קוד לשרת ולהורדת תוצאות. להרצת פקודות עדיף להשתמש ב־Windows Terminal.</p>
+
+        <table>
+          <tbody>
+            <tr><th>File protocol</th><td><span class="inline-code">SFTP</span></td></tr>
+            <tr><th>Host name</th><td><span class="inline-code">powerslurm-login3.tau.ac.il</span></td></tr>
+            <tr><th>Port number</th><td><span class="inline-code">22</span></td></tr>
+            <tr><th>User name</th><td><span class="inline-code">yossefm1</span></td></tr>
+            <tr><th>Password</th><td>הסיסמה האישית שלך. לא לשמור במסמך ציבורי.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout info">
+          <div class="icon">i</div>
+          <div>WinSCP מצוין להעברת קבצים, אבל לא מומלץ לנהל ממנו ריצות ארוכות. את הריצות מנהלים דרך SSH ב־Windows Terminal.</div>
+        </div>
+      </section>
+
+      <section id="first-login">
+        <h2>5. כניסה לשרת ובדיקת התחברות</h2>
+        <p class="lead">לאחר VPN, התחבר לשרת באמצעות SSH.</p>
+
+        <div class="code-card">
+          <div class="code-head"><span>כניסה לשרת</span><button class="copy-btn">Copy</button></div>
+          <pre><code>ssh yossefm1@powerslurm-login3.tau.ac.il</code></pre>
+        </div>
+
+        <p>אם זו כניסה ראשונה והשרת שואל האם לסמוך על host key, כתוב:</p>
+        <div class="code-card">
+          <div class="code-head"><span>אישור host key</span><button class="copy-btn">Copy</button></div>
+          <pre><code>yes</code></pre>
+        </div>
+
+        <h3>יציאה מהשרת</h3>
+        <div class="code-card">
+          <div class="code-head"><span>יציאה מ־SSH</span><button class="copy-btn">Copy</button></div>
+          <pre><code>exit</code></pre>
+        </div>
+        <p>או באמצעות <span class="kbd">Ctrl</span> + <span class="kbd">D</span>. אם אתה בתוך <span class="inline-code">tail -f</span>, קודם לחץ <span class="kbd">Ctrl</span> + <span class="kbd">C</span>.</p>
+
+        <div class="callout ok">
+          <div class="icon">✓</div>
+          <div>Job שנשלח עם <span class="inline-code">sbatch</span> ממשיך לרוץ גם אם יצאת מהשרת, סגרת את הטרמינל או התנתקת מה־VPN.</div>
+        </div>
+      </section>
+
+      <section id="folders">
+        <h2>6. ארגון תיקיות עבודה</h2>
+        <p class="lead">מומלץ לעבוד בתיקייה מסודרת תחת אזור הבית שלך, ולשמור תוצרים בתיקיית <span class="inline-code">Results</span>.</p>
+
+        <div class="code-card">
+          <div class="code-head"><span>מעבר לתיקיית עבודה קיימת</span><button class="copy-btn">Copy</button></div>
+          <pre><code>cd /a/home/cc/tree/taucc/students/enginer/yossefm1/hpc_tests/grid_stability_maps
+pwd
+ls -lh</code></pre>
+        </div>
+
+        <div class="code-card">
+          <div class="code-head"><span>יצירת תיקיית עבודה חדשה</span><button class="copy-btn">Copy</button></div>
+          <pre><code>mkdir -p /a/home/cc/tree/taucc/students/enginer/yossefm1/hpc_tests/my_project
+cd /a/home/cc/tree/taucc/students/enginer/yossefm1/hpc_tests/my_project
+mkdir -p Results</code></pre>
+        </div>
+      </section>
+
+      <section id="slurm-basics">
+        <h2>7. בסיס SLURM: איך שולחים עבודה לשרת</h2>
+        <p class="lead">ב־SLURM יוצרים קובץ <span class="inline-code">.sh</span> עם דרישות משאבים, ואז שולחים אותו עם <span class="inline-code">sbatch</span>.</p>
+
+        <h3>בדיקת partitions זמינים</h3>
+        <div class="code-card">
+          <div class="code-head"><span>בדיקת תורים זמינים</span><button class="copy-btn">Copy</button></div>
+          <pre><code>check_my_partitions
+sinfo -p power-general-shared-pool -o "%P %c %m %D %l %N"</code></pre>
+        </div>
+
+        <h3>תבנית SLURM בסיסית</h3>
+        <div class="code-card">
+          <div class="code-head"><span>run_job.sh</span><button class="copy-btn">Copy</button></div>
+          <pre><code>#!/bin/bash
+#SBATCH --job-name=my_job
+#SBATCH --partition=power-general-shared-pool
+#SBATCH --account=amir-users_v2
+#SBATCH --qos=public
+#SBATCH --output=my_job_%j.out
+#SBATCH --error=my_job_%j.err
+#SBATCH --time=01:00:00
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=4G
+
+cd $SLURM_SUBMIT_DIR
+
+/usr/local.cc/bin/matlab -batch "my_matlab_script"</code></pre>
+        </div>
+
+        <h3>שליחה ומעקב</h3>
+        <div class="code-card">
+          <div class="code-head"><span>שליחה ומעקב אחר job</span><button class="copy-btn">Copy</button></div>
+          <pre><code>sbatch run_job.sh
+squeue --me</code></pre>
+        </div>
+      </section>
+
+      <section id="matpower-test">
+        <h2>8. בדיקת MATLAB / MATPOWER לפני חישוב כבד</h2>
+        <p class="lead">לפני שמריצים סימולציות כבדות, כדאי לוודא ש־MATLAB ו־MATPOWER עובדים על השרת.</p>
+
+        <h3>סקריפט MATLAB לבדיקת MATPOWER</h3>
+        <div class="code-card">
+          <div class="code-head"><span>test_matpower_hpc.m</span><button class="copy-btn">Copy</button></div>
+          <pre><code>clear;
+clc;
+
+fprintf('Starting MATPOWER test on PowerSlurm...\n');
+
+matpower_path = '/a/home/cc/students/enginer/yossefm1/software/matpower8.1';
+if exist(matpower_path, 'dir') ~= 7
+    matpower_path = '/a/home/cc/tree/taucc/students/enginer/yossefm1/software/matpower8.1';
+end
+
+addpath(genpath(matpower_path));
+
+fprintf('MATPOWER path:\n%s\n', matpower_path);
+fprintf('Checking MATPOWER functions:\n');
+disp(which('runpf'));
+disp(which('define_constants'));
+disp(which('makeYbus'));
+disp(which('mpoption'));
+
+define_constants;
+mpopt = mpoption('out.all', 0, 'verbose', 0);
+
+fprintf('Running MATPOWER case9 power flow...\n');
+mpc = case9;
+res = runpf(mpc, mpopt);
+
+fprintf('Power flow success flag: %d\n', res.success);
+if ~res.success
+    error('Power flow failed.');
+end
+
+fprintf('Bus results: bus, Vm, Va\n');
+disp(res.bus(:, [BUS_I VM VA]));
+
+save('test_matpower_result.mat', 'res');
+fprintf('MATPOWER test completed successfully.\n');</code></pre>
+        </div>
+
+        <h3>קובץ SLURM לבדיקה</h3>
+        <div class="code-card">
+          <div class="code-head"><span>run_test_matpower.sh</span><button class="copy-btn">Copy</button></div>
+          <pre><code>#!/bin/bash
+#SBATCH --job-name=matpower_test
+#SBATCH --partition=power-general-shared-pool
+#SBATCH --account=amir-users_v2
+#SBATCH --qos=public
+#SBATCH --output=matpower_test_%j.out
+#SBATCH --error=matpower_test_%j.err
+#SBATCH --time=00:10:00
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=4G
+
+cd $SLURM_SUBMIT_DIR
+
+/usr/local.cc/bin/matlab -batch "test_matpower_hpc"</code></pre>
+        </div>
+
+        <div class="code-card">
+          <div class="code-head"><span>הרצת הבדיקה וקריאת פלט</span><button class="copy-btn">Copy</button></div>
+          <pre><code>sbatch run_test_matpower.sh
+squeue --me
+cat $(ls -t matpower_test_*.out | head -n 1)
+cat $(ls -t matpower_test_*.err | head -n 1)</code></pre>
+        </div>
+      </section>
+
+      <section id="parallel-test">
+        <h2>9. בדיקת Parallel MATLAB / parpool</h2>
+        <p class="lead">לפני ריצות מקביליות, חשוב לבדוק שהשרת מסוגל לפתוח workers לפי מספר ה־CPUs שביקשת מ־SLURM.</p>
+
+        <h3>סקריפט MATLAB לבדיקת parpool</h3>
+        <div class="code-card">
+          <div class="code-head"><span>test_parallel_hpc.m</span><button class="copy-btn">Copy</button></div>
+          <pre><code>clear;
+clc;
+
+fprintf('============================================================\n');
+fprintf('Parallel MATLAB smoke test on HPC\n');
+fprintf('============================================================\n');
+
+fprintf('MATLAB version: %s\n', version);
+fprintf('Working directory:\n%s\n', pwd);
+
+nWorkers = str2double(getenv('SLURM_CPUS_PER_TASK'));
+if isnan(nWorkers) || nWorkers &lt; 1
+    nWorkers = 4;
+end
+
+fprintf('Requested workers from SLURM_CPUS_PER_TASK: %d\n', nWorkers);
+
+p = gcp('nocreate');
+if ~isempty(p)
+    delete(p);
+end
+
+fprintf('Opening parallel pool with %d workers...\n', nWorkers);
+p = parpool('Processes', nWorkers);
+fprintf('Parallel pool opened. NumWorkers = %d\n', p.NumWorkers);
+
+N = 24;
+out = zeros(N, 1);
+
+tic;
+parfor k = 1:N
+    out(k) = sum(sin((1:200000) * k * 1e-7));
+end
+tParallel = toc;
+
+fprintf('parfor completed.\n');
+fprintf('Elapsed time: %.3f seconds\n', tParallel);
+fprintf('Output checksum: %.12f\n', sum(out));
+
+delete(gcp('nocreate'));
+
+fprintf('Parallel MATLAB smoke test completed successfully.\n');</code></pre>
+        </div>
+
+        <h3>בדיקה עם 32 workers</h3>
+        <div class="code-card">
+          <div class="code-head"><span>שליחת בדיקת 32 workers</span><button class="copy-btn">Copy</button></div>
+          <pre><code>sbatch \
+  --job-name=par_test32 \
+  --partition=power-general-shared-pool \
+  --account=amir-users_v2 \
+  --qos=public \
+  --output=parallel_test32_%j.out \
+  --error=parallel_test32_%j.err \
+  --time=00:20:00 \
+  --cpus-per-task=32 \
+  --mem=64G \
+  --chdir=$PWD \
+  --wrap='/usr/local.cc/bin/matlab -batch "test_parallel_hpc"'</code></pre>
+        </div>
+      </section>
+
+      <section id="heavy-job">
+        <h2>10. הרצת חישוב כבד בצורה נכונה</h2>
+        <p class="lead">לעבודה כבדה מומלץ להשתמש ב־wrapper MATLAB ובקובץ SLURM נקי. כך נמנעים מבעיות גרשיים בפקודת <span class="inline-code">matlab -batch</span>.</p>
+
+        <h3>עקרון מומלץ</h3>
+        <div class="steps">
+          <div class="step"><div><h4>קובץ driver</h4><p>הסקריפט הראשי של הפרויקט, למשל <span class="inline-code">run_stability_analysis_professional_parallel.m</span>.</p></div></div>
+          <div class="step"><div><h4>קובץ wrapper</h4><p>מוסיף paths, בודק שהקבצים קיימים, ואז קורא ל־driver.</p></div></div>
+          <div class="step"><div><h4>קובץ SLURM</h4><p>מבקש CPUs, זיכרון וזמן, ואז מריץ את ה־wrapper.</p></div></div>
+        </div>
+
+        <h3>Wrapper MATLAB לדוגמה</h3>
+        <div class="code-card">
+          <div class="code-head"><span>run_main_full_hpc_wrapper.m</span><button class="copy-btn">Copy</button></div>
+          <pre><code>clear;
+clc;
+
+fprintf('============================================================\n');
+fprintf('HPC FULL main wrapper started\n');
+fprintf('============================================================\n');
+
+project_dir = pwd;
+matpower_path = '/a/home/cc/students/enginer/yossefm1/software/matpower8.1';
+
+addpath(genpath(matpower_path));
+addpath(genpath(project_dir));
+
+fprintf('Project dir:\n%s\n', project_dir);
+fprintf('MATPOWER path:\n%s\n', matpower_path);
+
+fprintf('Driver path:\n%s\n', which('run_stability_analysis_professional_parallel'));
+fprintf('compute_H path:\n%s\n', which('compute_H'));
+
+if isempty(which('run_stability_analysis_professional_parallel'))
+    error('Main driver script was not found.');
+end
+
+run_stability_analysis_professional_parallel;
+
+fprintf('============================================================\n');
+fprintf('HPC FULL main wrapper completed successfully\n');
+fprintf('============================================================\n');</code></pre>
+        </div>
+
+        <h3>SLURM לריצה כבדה</h3>
+        <div class="code-card">
+          <div class="code-head"><span>run_main_full_32.sh</span><button class="copy-btn">Copy</button></div>
+          <pre><code>#!/bin/bash
+#SBATCH --job-name=grid_full32
+#SBATCH --partition=power-general-shared-pool
+#SBATCH --account=amir-users_v2
+#SBATCH --qos=public
+#SBATCH --output=grid_full32_%j.out
+#SBATCH --error=grid_full32_%j.err
+#SBATCH --time=24:00:00
+#SBATCH --cpus-per-task=32
+#SBATCH --mem=96G
+
+set -x
+
+echo "Job started at: $(date)"
+echo "Host: $(hostname)"
+echo "SLURM_JOB_ID: $SLURM_JOB_ID"
+echo "SLURM_CPUS_PER_TASK: $SLURM_CPUS_PER_TASK"
+echo "SLURM_SUBMIT_DIR: $SLURM_SUBMIT_DIR"
+
+cd $SLURM_SUBMIT_DIR
+
+pwd
+ls -lh run_main_full_hpc_wrapper.m
+ls -lh run_stability_analysis_professional_parallel.m
+
+echo "Starting MATLAB full run..."
+/usr/local.cc/bin/matlab -batch "run_main_full_hpc_wrapper"
+
+echo "MATLAB exit code: $?"
+echo "Job ended at: $(date)"</code></pre>
+        </div>
+
+        <div class="code-card">
+          <div class="code-head"><span>בדיקה ושליחה</span><button class="copy-btn">Copy</button></div>
+          <pre><code>bash -n run_main_full_32.sh
+sbatch run_main_full_32.sh
+squeue --me</code></pre>
+        </div>
+      </section>
+
+      <section id="monitoring">
+        <h2>11. מעקב וניהול jobs</h2>
+        <p class="lead">לאחר שליחת job ניתן לצאת מהשרת. ה־job ממשיך לרוץ. כדי לעקוב, נכנסים שוב ובודקים את התור ואת קבצי הפלט.</p>
+
+        <div class="code-card">
+          <div class="code-head"><span>בדיקת jobs פעילים</span><button class="copy-btn">Copy</button></div>
+          <pre><code>squeue --me</code></pre>
+        </div>
+
+        <div class="code-card">
+          <div class="code-head"><span>בדיקת מצב job שסיים</span><button class="copy-btn">Copy</button></div>
+          <pre><code>sacct -j JOB_ID --format=JobID,JobName,State,ExitCode,Elapsed,ReqCPUS,ReqMem,NodeList%30</code></pre>
+        </div>
+
+        <div class="code-card">
+          <div class="code-head"><span>מעקב חי אחרי פלט</span><button class="copy-btn">Copy</button></div>
+          <pre><code>tail -f $(ls -t grid_full32_*.out | head -n 1)</code></pre>
+        </div>
+
+        <p>כדי לצאת מ־<span class="inline-code">tail -f</span>, לחץ <span class="kbd">Ctrl</span> + <span class="kbd">C</span>.</p>
+
+        <div class="code-card">
+          <div class="code-head"><span>עצירת job</span><button class="copy-btn">Copy</button></div>
+          <pre><code>scancel JOB_ID</code></pre>
+        </div>
+      </section>
+
+      <section id="results">
+        <h2>12. תוצאות, הורדה וניתוח מקומי</h2>
+        <p class="lead">מומלץ שהשרת יבצע את החישוב הכבד וישמור קובץ <span class="inline-code">.mat</span>. את הוויזואליזציה והייצוא ל־PDF/PNG/EPS נוח לעשות במחשב המקומי.</p>
+
+        <h3>איתור תוצאות אחרונות</h3>
+        <div class="code-card">
+          <div class="code-head"><span>איתור קבצי תוצאות</span><button class="copy-btn">Copy</button></div>
+          <pre><code>find Results -maxdepth 2 -type f | tail -n 20
+ls -lt Results | head</code></pre>
+        </div>
+
+        <h3>הורדה דרך WinSCP</h3>
+        <p>ב־WinSCP עבור אל:</p>
+        <div class="code-card">
+          <div class="code-head"><span>תיקיית Results בשרת</span><button class="copy-btn">Copy</button></div>
+          <pre><code>/a/home/cc/tree/taucc/students/enginer/yossefm1/hpc_tests/grid_stability_maps/Results</code></pre>
+        </div>
+        <p>פתח את תיקיית ה־timestamp האחרונה והורד את קובץ ה־<span class="inline-code">.mat</span> למחשב.</p>
+
+        <h3>דוגמת MATLAB מקומית להפקת Figure</h3>
+        <div class="code-card">
+          <div class="code-head"><span>plot_results_local.m</span><button class="copy-btn">Copy</button></div>
+          <pre><code>clear;
+clc;
+
+load('StabilityAnalysis_YYYY_MM_DD_HH_MM_SS.mat');
+
+fig = figure('Color','w', 'Units','centimeters', 'Position',[1 1 42 28]);
+tl = tiledlayout(2, 3, 'TileSpacing','compact', 'Padding','compact');
+
+for ci = 1:numel(status_maps)
+    ax = nexttile(tl);
+    plot_stability_map(status_maps{ci}, d_vec, cases{ci,4}, ax, plot_style);
+end
+
+title(tl, 'Small-Signal Stability Regions', 'FontSize', 15, 'FontWeight', 'bold');
+
+exportgraphics(fig, 'StabilityRegions_ActiveCases.pdf', ...
+    'ContentType','vector', ...
+    'BackgroundColor','white');
+
+exportgraphics(fig, 'StabilityRegions_ActiveCases.png', ...
+    'Resolution', 300, ...
+    'BackgroundColor','white');</code></pre>
+        </div>
+      </section>
+
+      <section id="troubleshooting">
+        <h2>13. תקלות נפוצות ופתרונות</h2>
+
+        <h3>1. job הסתיים מהר מדי וה־out ריק</h3>
+        <p>בדוק את סטטוס ה־job עם <span class="inline-code">sacct</span>. אם ExitCode הוא 0 אבל אין פלט, ייתכן שהפקודה ב־SLURM לא הריצה את הסקריפט הנכון.</p>
+        <div class="code-card">
+          <div class="code-head"><span>בדיקת job שסיים</span><button class="copy-btn">Copy</button></div>
+          <pre><code>sacct -j JOB_ID --format=JobID,JobName,State,ExitCode,Elapsed,ReqCPUS,ReqMem,NodeList%30</code></pre>
+        </div>
+
+        <h3>2. בעיית גרשיים ב־matlab -batch</h3>
+        <p>אם מופיעה שגיאה כמו <span class="inline-code">unexpected EOF while looking for matching '</span>, השתמש ב־wrapper MATLAB במקום פקודת <span class="inline-code">-batch</span> ארוכה.</p>
+
+        <h3>3. בדיקת נתיבים של פונקציות MATLAB</h3>
+        <div class="code-card">
+          <div class="code-head"><span>בדיקת which ב־MATLAB</span><button class="copy-btn">Copy</button></div>
+          <pre><code>/usr/local.cc/bin/matlab -batch "which runpf -all; which case30 -all; which mpoption -all"</code></pre>
+        </div>
+
+        <h3>4. אזהרת .profile בכניסה</h3>
+        <p>אם מופיעה שגיאה בכניסה כמו:</p>
+        <div class="code-card">
+          <div class="code-head"><span>דוגמת שגיאת .profile</span><button class="copy-btn">Copy</button></div>
+          <pre><code>-bash: /a/home/cc/students/enginer/yossefm1/.profile: line 34: syntax error near unexpected token `('</code></pre>
+        </div>
+        <p>זה בדרך כלל לא עוצר jobs, אבל כדאי לתקן בהמשך את קובץ <span class="inline-code">~/.profile</span>. בינתיים ניתן לעבוד רגיל אם הפקודות עובדות.</p>
+
+        <h3>5. בדיקת שגיאות בקובץ SLURM לפני שליחה</h3>
+        <div class="code-card">
+          <div class="code-head"><span>בדיקת syntax של bash</span><button class="copy-btn">Copy</button></div>
+          <pre><code>bash -n run_main_full_32.sh</code></pre>
+        </div>
+      </section>
+
+      <section id="quick-ref">
+        <h2>14. פקודות מהירות להעתקה</h2>
+
+        <h3>כניסה וניווט</h3>
+        <div class="code-card">
+          <div class="code-head"><span>כניסה וכניסה לתיקיית העבודה</span><button class="copy-btn">Copy</button></div>
+          <pre><code>ssh yossefm1@powerslurm-login3.tau.ac.il
+cd /a/home/cc/tree/taucc/students/enginer/yossefm1/hpc_tests/grid_stability_maps
+pwd
+ls -lh</code></pre>
+        </div>
+
+        <h3>מעקב אחרי jobs</h3>
+        <div class="code-card">
+          <div class="code-head"><span>ניהול בסיסי של jobs</span><button class="copy-btn">Copy</button></div>
+          <pre><code>squeue --me
+sacct -j JOB_ID --format=JobID,JobName,State,ExitCode,Elapsed,ReqCPUS,ReqMem,NodeList%30
+scancel JOB_ID</code></pre>
+        </div>
+
+        <h3>פלטים אחרונים</h3>
+        <div class="code-card">
+          <div class="code-head"><span>קריאת out/err אחרונים</span><button class="copy-btn">Copy</button></div>
+          <pre><code>cat $(ls -t *.out | head -n 1)
+cat $(ls -t *.err | head -n 1)</code></pre>
+        </div>
+
+        <h3>תוצאות</h3>
+        <div class="code-card">
+          <div class="code-head"><span>איתור תוצרים</span><button class="copy-btn">Copy</button></div>
+          <pre><code>find Results -maxdepth 2 -type f | tail -n 20
+du -sh Results
+ls -lt Results | head</code></pre>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>Prepared as a practical HPC workflow guide for Yossef Melamed. Passwords and private credentials are intentionally not included.</p>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.copy-btn').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const card = button.closest('.code-card');
+        const code = card.querySelector('pre code').innerText;
+        try {
+          await navigator.clipboard.writeText(code);
+          const old = button.textContent;
+          button.textContent = 'Copied!';
+          button.style.background = '#16a34a';
+          setTimeout(() => {
+            button.textContent = old;
+            button.style.background = '#1e293b';
+          }, 1200);
+        } catch (err) {
+          const textarea = document.createElement('textarea');
+          textarea.value = code;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+          button.textContent = 'Copied!';
+          setTimeout(() => button.textContent = 'Copy', 1200);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
