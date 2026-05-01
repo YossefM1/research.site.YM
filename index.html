@@ -3,79 +3,127 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Research homepage of Yossef Melamed, focusing on power system stability, online inertia estimation, grid-forming inverters, and advanced control." />
+
   <title>Yossef Melamed | Research Homepage</title>
+
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <header class="topbar">
-    <div class="brand">
-      <div class="small-label" id="researcherLabel">Researcher Name</div>
-      <div class="name" id="researcherName">Yossef Melamed</div>
-    </div>
+    <a class="brand" href="index.html" aria-label="Yossef Melamed research homepage">
+      <div class="small-label">Research Homepage</div>
+      <div class="name">Yossef Melamed</div>
+    </a>
 
-    <nav class="nav">
-      <a href="index.html" id="navHome">Home</a>
-      <a href="results.html" id="navResults">Results</a>
-      <a href="publications.html" id="navPublications">Publications</a>
-      <a href="contact.html" id="navContact">Contact</a>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="index.html" class="active">Home</a>
+      <a href="grid-stability.html">Grid Stability</a>
+      <a href="inertia-measurement.html">Inertia Measurement</a>
+      <a href="vsm-hinfinity.html">VSM Control</a>
+      <a href="results.html">Results</a>
+      <a href="publications.html">Publications</a>
+      <a href="contact.html">Contact</a>
     </nav>
-
-    <button id="langToggle">עברית</button>
   </header>
 
-  <main class="container">
-    <section class="hero">
+  <main>
+    <section class="hero container">
       <div class="hero-text">
-        <div class="badge" id="badge">Academic Research Homepage</div>
-        <h1 id="mainTitle">Research Topics</h1>
-        <p id="subtitle">
-          A professional homepage presenting core research directions in power systems,
-          grid dynamics, and advanced inverter control.
+        <div class="badge">Power Systems · Stability · Control</div>
+
+        <h1>
+          Research on Modern Power System Stability and Grid-Forming Inverter Control
+        </h1>
+
+        <p class="subtitle">
+          This website presents research directions, simulation results, laboratory validation,
+          and technical resources related to power system dynamics, online inertia estimation,
+          and advanced control of inverter-dominated grids.
         </p>
 
         <div class="hero-actions">
-          <a class="primary-btn" href="results.html" id="heroBtn1">View Research Results</a>
-          <a class="secondary-btn" href="publications.html" id="heroBtn2">Publications</a>
+          <a class="primary-btn" href="results.html">View Research Results</a>
+          <a class="secondary-btn" href="publications.html">Publications</a>
         </div>
       </div>
 
-      <div class="profile-card">
-        <div class="profile-label" id="profileLabel">Researcher</div>
-        <div class="profile-name" id="profileName">Yossef Melamed</div>
-        <div class="profile-university" id="university">Tel Aviv University</div>
-      </div>
+      <aside class="profile-card" aria-label="Researcher profile">
+        <div class="profile-label">Researcher</div>
+        <div class="profile-name">Yossef Melamed</div>
+        <div class="profile-university">Tel Aviv University</div>
+
+        <div class="profile-divider"></div>
+
+        <p>
+          Ph.D. research in electrical engineering, focusing on power system stability,
+          grid dynamics, and inverter-based resources.
+        </p>
+      </aside>
     </section>
 
-    <section class="topics">
-      <h2 id="topicsTitle">Research Topics</h2>
+    <section class="topics container">
+      <div class="section-heading">
+        <span class="section-kicker">Research Areas</span>
+        <h2>Core Research Topics</h2>
+        <p>
+          The main research directions are organized into focused pages with explanations,
+          results, figures, and technical documentation.
+        </p>
+      </div>
 
       <div class="cards">
         <a class="card clickable-card" href="grid-stability.html">
-          <h3 id="topic1Title">Grid Stability</h3>
-          <p id="topic1Text">
-            Research on dynamic behavior, robustness, and stability challenges in modern electric grids with increasing inverter-based resources.
+          <div class="card-number">01</div>
+          <h3>Grid Stability</h3>
+          <p>
+            Analysis of dynamic behavior, stability margins, robustness, and operating limits
+            in modern electric grids with increasing penetration of inverter-based resources.
           </p>
+          <span class="card-link">Open topic →</span>
         </a>
 
         <a class="card clickable-card" href="inertia-measurement.html">
-          <h3 id="topic2Title">Real-Time Online Inertia Measurement</h3>
-          <p id="topic2Text">
-            Development of methods for estimating grid inertia online in real time, with emphasis on monitoring and system awareness.
+          <div class="card-number">02</div>
+          <h3>Real-Time Online Inertia Measurement</h3>
+          <p>
+            Development of online methods for estimating grid inertia using controlled power
+            steps, local frequency measurements, and filtering of inter-area oscillatory effects.
           </p>
+          <span class="card-link">Open topic →</span>
         </a>
 
         <a class="card clickable-card" href="vsm-hinfinity.html">
-          <h3 id="topic3Title">VSM Control with H-Infinity</h3>
-          <p id="topic3Text">
-            Advanced control design for Virtual Synchronous Machines using H-infinity methods for improved performance and resilience.
+          <div class="card-number">03</div>
+          <h3>VSM Control with H-Infinity</h3>
+          <p>
+            Advanced control design for Virtual Synchronous Machines using robust control
+            methods to improve performance, damping, and resilience under grid disturbances.
           </p>
+          <span class="card-link">Open topic →</span>
         </a>
+      </div>
+    </section>
+
+    <section class="highlight-section container">
+      <div class="highlight-box">
+        <div>
+          <span class="section-kicker">Research Focus</span>
+          <h2>From Theory to Simulation and Laboratory Validation</h2>
+        </div>
+
+        <p>
+          The research combines analytical modeling, MATLAB/Simulink simulations, ETAP-based
+          power system studies, and laboratory-scale experiments to evaluate stability and
+          inertia-related behavior in practical grid scenarios.
+        </p>
       </div>
     </section>
   </main>
 
-  <footer class="footer" id="footer">
-    Research homepage draft · Yossef Melamed · Tel Aviv University
+  <footer class="footer">
+    <span>Research homepage · Yossef Melamed · Tel Aviv University</span>
   </footer>
 
   <script src="script.js"></script>
